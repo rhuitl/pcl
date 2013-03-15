@@ -424,18 +424,25 @@ pcl::octree::OctreePointCloud<PointT, LeafContainerT, BranchContainerT, OctreeT>
   // increase octree size until point fits into bounding box
   while (true)
   {
-    bool bLowerBoundViolationX = (pointIdx_arg.x < minX_);
-    bool bLowerBoundViolationY = (pointIdx_arg.y < minY_);
-    bool bLowerBoundViolationZ = (pointIdx_arg.z < minZ_);
+    bool bLowerBoundViolationX = (pointIdx_arg.x - minX_) < -minValue * 512.; // <
+    bool bLowerBoundViolationY = (pointIdx_arg.y - minY_) < -minValue * 512.; // <
+    bool bLowerBoundViolationZ = (pointIdx_arg.z - minZ_) < -minValue * 512.; // <
 
-    bool bUpperBoundViolationX = (pointIdx_arg.x >= maxX_);
-    bool bUpperBoundViolationY = (pointIdx_arg.y >= maxY_);
-    bool bUpperBoundViolationZ = (pointIdx_arg.z >= maxZ_);
+    bool bUpperBoundViolationX = (pointIdx_arg.x - maxX_) > minValue * 512.; // >=
+    bool bUpperBoundViolationY = (pointIdx_arg.y - maxY_) > minValue * 512.; // >=
+    bool bUpperBoundViolationZ = (pointIdx_arg.z - maxZ_) > minValue * 512.; // >=
 
     // do we violate any bounds?
     if (bLowerBoundViolationX || bLowerBoundViolationY || bLowerBoundViolationZ || bUpperBoundViolationX
         || bUpperBoundViolationY || bUpperBoundViolationZ )
     {
+//std::cerr << "Detected BB violation: "
+//    << (int)bLowerBoundViolationX << ": " << pointIdx_arg.x << " < "  << minX_ << "  "
+//    << (int)bLowerBoundViolationY << ": " << pointIdx_arg.y << " < "  << minY_ << "  "
+//    << (int)bLowerBoundViolationZ << ": " << pointIdx_arg.z << " < "  << minZ_ << "  "
+//    << (int)bUpperBoundViolationX << ": " << pointIdx_arg.x << " >= " << maxX_ << "  "
+//    << (int)bUpperBoundViolationY << ": " << pointIdx_arg.y << " >= " << maxY_ << "  "
+//    << (int)bUpperBoundViolationZ << ": " << pointIdx_arg.z << " >= " << maxZ_ << std::endl;
 
       if (boundingBoxDefined_)
       {
