@@ -15,8 +15,14 @@ macro(PCL_CHECK_FOR_SSE)
         execute_process(COMMAND ${CMAKE_CXX_COMPILER} "-dumpversion"
                         OUTPUT_VARIABLE GCC_VERSION_STRING)
         if(GCC_VERSION_STRING VERSION_GREATER 4.2 AND NOT APPLE AND NOT CMAKE_CROSSCOMPILING)
-            SET(SSE_FLAGS "${SSE_FLAGS} -march=native")
-            message(STATUS "Using CPU native flags for SSE optimization: ${SSE_FLAGS}")
+           # SET(SSE_FLAGS "${SSE_FLAGS} -march=native")
+
+		# We're setting the SSE_FLAGS to corei7, matching our server running on xen and eliminating problems g++ had with -march=native
+		SET(SSE_FLAGS "${SSE_FLAGS} -march=corei7")
+		# end of change
+        
+	   message(STATUS "Using CPU native flags for SSE optimization: ${SSE_FLAGS}")
+	   
         endif()
     endif()
 
